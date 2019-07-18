@@ -14,7 +14,7 @@ module.exports = function (passport, user, config, authMeEndpoint) {
     try {
       const url = authMeEndpoint
       const headers = { 'auth': { 'bearer': accessToken }}
-      const {data: body} = await axios.get({ url, headers })
+      const { data: body } = await axios.get({ url, headers })
       const [ dbUser, created ] = await User.findOrCreate({ where: { email: body.email }, defaults: { token: accessToken, firstName: body.first_name, lastName: body.last_name, title: body.title, role: body.roles[0].name } })
       return cb(null, dbUser)
     } catch (err) {
@@ -22,4 +22,3 @@ module.exports = function (passport, user, config, authMeEndpoint) {
     }
   }
 }
-

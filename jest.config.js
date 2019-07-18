@@ -17,6 +17,7 @@ module.exports = {
    '<rootDir>/index.js',
    '!<rootDir>/jest.config.js',
    '!<rootDir>/__tests__/**',
+   '!<rootDir>/routes/**',
    '!<rootDir>/models/**',
    '!<rootDir>/coverage/**'
  ]
