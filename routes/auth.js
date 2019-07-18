@@ -1,5 +1,5 @@
 
-module.exports = (app, passport) => {
+module.exports = (app, passport, sucessRedirectPath) => {
   app.get('/g5_auth/users/auth/g5',
     passport.authenticate('oauth2'))
 
@@ -7,6 +7,6 @@ module.exports = (app, passport) => {
     passport.authenticate('oauth2', { failureRedirect: '/g5_auth/users/auth/g5' }),
     function (req, res) {
       // Successful authentication, redirect home.
-      res.redirect('/')
+      res.redirect(sucessRedirectPath)
     })
 }

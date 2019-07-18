@@ -21,7 +21,7 @@ function init(app, models, config) {
   app.use(passport.session())
   require('./models/sync')(models)
   require('./config/passport')(passport, models.user, config.passport, config.authMeEndpoint)
-  require('./routes/auth')(app, passport)
+  require('./routes/auth')(app, passport, config.sucessRedirectPath)
 }
 
 function isAuthenticated (req, res, next) {
