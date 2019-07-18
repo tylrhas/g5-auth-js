@@ -1,4 +1,4 @@
-module.exports = function (passport, user) {
+module.exports = function (passport, user, config) {
   const User = user
   const OAuth2Strategy = require('passport-oauth2')
   const request = require('request')
@@ -16,13 +16,7 @@ module.exports = function (passport, user) {
   })
 
   // oauth 2 configuration for the passport strategy
-  passport.use(new OAuth2Strategy({
-    authorizationURL: process.env.AUTH_ENDPOINT,
-    tokenURL: process.env.TOKEN_ENDPOINT,
-    clientID: process.env.AUTH_CLIENT_ID,
-    clientSecret: process.env.AUTH_CLIENT_SECRET,
-    callbackURL: process.env.AUTH_REDIRECT_URI
-  },
+  passport.use(new OAuth2Strategy(config,
   function (accessToken, refreshToken, profile, cb) {
     console.log(accessToken)
     console.log(cb)
