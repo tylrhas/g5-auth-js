@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "clear_jest": "jest --clearCache"
-  },  "repository": {
+  },
+  "repository": {
     "type": "git",
     "url": "https://github.com/tylrhas/g5-auth-js.git"
   },
