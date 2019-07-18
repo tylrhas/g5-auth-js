@@ -20,7 +20,7 @@ function init(app, models, config) {
   app.use(passport.initialize())
   app.use(passport.session())
   require('./models/sync')(models)
-  require('./config/passport')(passport, models.user, config.passport)
+  require('./config/passport')(passport, models.user, config.passport, config.authMeEndpoint)
   require('./routes/auth')(app, passport)
 }
 

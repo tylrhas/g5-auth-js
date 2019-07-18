@@ -8,7 +8,8 @@ const {
   G5_AUTH_CLIENT_ID: clientID,
   G5_AUTH_CLIENT_SECRET: clientSecret,
   G5_AUTH_REDIRECT_URI: callbackURL,
-  SESSION_SECRET: secret
+  SESSION_SECRET: secret,
+  G5_AUTH_ME_ENDPOINT : authMeEndpoint
 } = process.env
 const authConfig = {
   passport: {
@@ -18,6 +19,7 @@ const authConfig = {
     clientSecret,
     callbackURL
   },
+  authMeEndpoint,
   session: {
     secret
   }
