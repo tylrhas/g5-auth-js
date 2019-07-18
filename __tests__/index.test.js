@@ -42,3 +42,24 @@ describe('Add Routes and Tables', () => {
     })
   })
 })
+
+describe('Add Routes and Tables', () => {
+  test('Authenticated True', () => {
+    const req = {}
+    const res = {}
+    const next = jest.fn()
+    req.isAuthenticated = jest.fn(() => true )
+    const auth = require('../index').isAuthenticated(req, res, next)
+    expect(next).toHaveBeenCalled()
+  })
+  test('Authenticated False', () => {
+    const req = {}
+    const res = {}
+    res.redirect = jest.fn()
+    const next = jest.fn()
+    req.isAuthenticated = jest.fn(() => false )
+    const auth = require('../index').isAuthenticated(req, res, next)
+    expect(next).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith('/g5_auth/users/auth/g5')
+  })
+})
