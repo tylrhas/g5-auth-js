@@ -3,13 +3,13 @@ module.exports = function (passport, user, config) {
   const OAuth2Strategy = require('passport-oauth2')
   const request = require('request')
 
-  passport.serializeUser(function (user, done) {
+  passport.serializeUser((user, done) => {
     // placeholder for custom user serialization
     // null is for errors
     done(null, user)
   })
 
-  passport.deserializeUser(function (user, done) {
+  passport.deserializeUser((user, done) => {
     // placeholder for custom user deserialization.
     // null is for errors
     done(null, user)
