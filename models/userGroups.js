@@ -1,7 +1,6 @@
 const { INTEGER, STRING } = require('sequelize')
 
-module.exports = (sequelize) => {
-  const userGroup = sequelize.define('userGroup', {
+module.exports = (sequelize) => sequelize.define('userGroup', {
     id: {
       autoIncrement: true,
       primaryKey: true,
@@ -11,8 +10,3 @@ module.exports = (sequelize) => {
       type: STRING
     }
   })
-  userGroup.associate = (models) => {
-    models.userGroup.belongsTo(models.user)
-  }
-  return userGroup
-}
