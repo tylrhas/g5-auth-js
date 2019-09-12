@@ -11,6 +11,7 @@ module.exports = function (passport, user, config, authMeEndpoint) {
   passport.use(new OAuth2Strategy(config, authenticate))
 
   async function authenticate(accessToken, refreshToken, profile, cb) {
+    console.log({ accessToken })
     try {
       const url = authMeEndpoint
       debugger
@@ -18,7 +19,7 @@ module.exports = function (passport, user, config, authMeEndpoint) {
         Authorization: `Bearer ${accessToken}`
       }
       const { data: body } = await axios.get(url, {headers })
-      const [ dbUser, created ] = await User.findOrCreate({ where: { email: body.email }, defaults: { token: accessToken, firstName: body.first_name, lastName: body.last_name, title: body.title, role: body.roles[0].name } })
+      const [ dbUser, created ] = await User.findOrCreate({ where: { email: body.email }, defaults: { token: accessToken, firstName: body.first_name, lastName: body.last_name, role: body.title, role: body.roles[0].name } })
       return cb(null, dbUser)
     } catch (err) {
       return cb(err, null)
