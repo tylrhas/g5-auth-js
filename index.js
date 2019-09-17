@@ -11,7 +11,7 @@ module.exports = {
  * @param {*} models
  * @param {*} config
  */
-function init(app, models, config) {
+function init(app, config) {
   app.use(cookieSession({
     name: 'mysession',
     keys: [`${config.session.secret}`],
@@ -19,9 +19,10 @@ function init(app, models, config) {
   }))
   app.use(passport.initialize())
   app.use(passport.session())
-  require('./models/sync')(models)
+  const models = require('./models')
   require('./config/passport')(passport, models.user, config.passport, config.authMeEndpoint)
   require('./routes/auth')(app, passport, config.sucessRedirectPath)
+  return models
 }
 
 function isAuthenticated (req, res, next) {
