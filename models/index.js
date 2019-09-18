@@ -9,7 +9,8 @@ const {
   DATABASE_IDLE: idle,
   DATABASE_AQUIRE: acquire,
   DATABASE_EVICT: evict,
-  DATABASE_SSL: ssl
+  DATABASE_SSL: ssl,
+  DATABASE_LOGGING: logging
 } = process.env
 
 let minTest = parseInt(min)
@@ -21,7 +22,7 @@ let evictTest = parseInt(evict)
 const sequelize = new Sequelize(dbUrl, {
   pool: { maxTest, minTest, idleTest, acquireTest, evictTest },
   dialectOptions: { ssl: ssl === 'true' },
-  logging: false
+  logging: (logging === 'true')
 })
 
 const db = {}
@@ -40,4 +41,4 @@ Object.keys(db).forEach(modelName => {
   }
 })
 
-module.exports = Object.assign(db, { sequelize })
+module.exports = {...db, sequelize, Sequelize }

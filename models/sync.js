@@ -1,11 +1,12 @@
 const fs = require('fs')
 const path = require('path')
 
-module.exports = function (models) {
+module.exports = function (sequelize) {
+  const models = {}
   fs.readdirSync(__dirname)
     .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file !== 'sync.js' ) // get all the model files
     .forEach(file => {
-      const model = models.sequelize.import(path.join(__dirname, file))
+      const model = sequelize.import(path.join(__dirname, file))
       const { name } = model
       models[name] = model
     })
@@ -15,5 +16,5 @@ module.exports = function (models) {
       models[modelName].associate(models)
     }
   })
-  // return { models, models.sequelize }
+  return models 
 }
