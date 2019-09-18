@@ -19,7 +19,7 @@ function init(app, config) {
   }))
   app.use(passport.initialize())
   app.use(passport.session())
-  const db = models()
+  const db = require('./models')
   require('./config/passport')(passport, db.user, config.passport, config.authMeEndpoint)
   require('./routes/auth')(app, passport, config.sucessRedirectPath)
   return models
@@ -33,6 +33,6 @@ function isAuthenticated (req, res, next) {
   }
 }
 
-function models() {
-  return require('./models')
+function models(sequelize) {
+  return require('./models/sync')(sequelize)
 }
