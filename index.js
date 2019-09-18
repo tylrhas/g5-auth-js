@@ -2,13 +2,13 @@ const passport = require('passport')
 const cookieSession = require('cookie-session')
 module.exports = {
   init,
-  isAuthenticated
+  isAuthenticated,
+  models
 }
 /**
  *
  *
  * @param {*} app
- * @param {*} models
  * @param {*} config
  */
 function init(app, config) {
@@ -19,8 +19,8 @@ function init(app, config) {
   }))
   app.use(passport.initialize())
   app.use(passport.session())
-  const models = require('./models')
-  require('./config/passport')(passport, models.user, config.passport, config.authMeEndpoint)
+  const db = models()
+  require('./config/passport')(passport, db.user, config.passport, config.authMeEndpoint)
   require('./routes/auth')(app, passport, config.sucessRedirectPath)
   return models
 }
@@ -31,4 +31,8 @@ function isAuthenticated (req, res, next) {
   } else {
     res.redirect('/g5_auth/users/auth/g5')
   }
+}
+
+function models() {
+  return require('./models')
 }
