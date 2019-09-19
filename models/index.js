@@ -10,7 +10,10 @@ const {
   DATABASE_AQUIRE: acquire,
   DATABASE_EVICT: evict,
   DATABASE_SSL: ssl,
-  DATABASE_LOGGING: logging
+  DATABASE_LOGGING: logging,
+  DATABASE_CA: ca,
+  DATABASE_CERT: cert,
+  DATABASE_KEY: key
 } = process.env
 
 let minTest = parseInt(min)
@@ -21,7 +24,13 @@ let evictTest = parseInt(evict)
 
 const sequelize = new Sequelize(dbUrl, {
   pool: { maxTest, minTest, idleTest, acquireTest, evictTest },
-  dialectOptions: { ssl: ssl === 'true' },
+  dialectOptions: {
+    ssl: (ssl === 'true') ? {
+      ca: fs.readFileSync(path.join(__dirname, ca)),
+      cert: fs.readFileSync(path.join(__dirname, cert)),
+      key: fs.readFileSync(path.join(__dirname, key))
+    } : false
+  },
   logging: (logging === 'true')
 })
 
