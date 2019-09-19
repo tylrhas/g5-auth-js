@@ -26,11 +26,11 @@ const sequelize = new Sequelize(dbUrl, {
   pool: { maxTest, minTest, idleTest, acquireTest, evictTest },
   dialectOptions: {
     ssl: (ssl === 'true') ? {
-      ca: fs.readFileSync(path.join(__dirname, ca)),
-      cert: fs.readFileSync(path.join(__dirname, cert)),
-      key: fs.readFileSync(path.join(__dirname, key))
+      ca: fs.readFileSync(path.join(__dirname,'../../', ca)),
+      cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
+      key: fs.readFileSync(path.join(__dirname,'../../', key))
     } : false
-  },
+  }
   logging: (logging === 'true')
 })
 
