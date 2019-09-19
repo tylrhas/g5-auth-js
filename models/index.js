@@ -30,7 +30,7 @@ const sequelize = new Sequelize(dbUrl, {
       cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
       key: fs.readFileSync(path.join(__dirname,'../../', key))
     } : false
-  }
+  },
   logging: (logging === 'true')
 })
 
