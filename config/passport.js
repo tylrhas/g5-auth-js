@@ -11,7 +11,6 @@ module.exports = function (passport, user, config, authMeEndpoint) {
   passport.use(new OAuth2Strategy(config, authenticate))
 
   async function authenticate(accessToken, refreshToken, profile, cb) {
-    console.log({ accessToken })
     try {
       const url = authMeEndpoint
       debugger

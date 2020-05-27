@@ -9,7 +9,7 @@ const {
   DATABASE_IDLE: idle,
   DATABASE_AQUIRE: acquire,
   DATABASE_EVICT: evict,
-  DATABASE_SSL: ssl,
+  DATABASE_SSL: sslEnabled,
   DATABASE_LOGGING: logging,
   DATABASE_CA: ca,
   DATABASE_CERT: cert,
@@ -22,12 +22,12 @@ let maxTest = parseInt(max)
 let idleTest = parseInt(idle)
 let acquireTest = parseInt(acquire)
 let evictTest = parseInt(evict) 
-let sslConfig = {}
+let ssl = {}
 
-if (gke === 'true' && ssl === 'true') {
-  sslConfig = { ca, cert, key }
-} else if (ssl === 'true') {
-  sslConfig = {
+if (gke === 'true' && sslEnabled === 'true') {
+  ssl = { ca, cert, key }
+} else if (sslEnabled === 'true') {
+  ssl = {
     ca: fs.readFileSync(path.join(__dirname,'../../', ca)),
     cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
     key: fs.readFileSync(path.join(__dirname,'../../', key))
@@ -36,7 +36,7 @@ if (gke === 'true' && ssl === 'true') {
 const sequelize = new Sequelize(dbUrl, {
   pool: { maxTest, minTest, idleTest, acquireTest, evictTest },
   // logging: false,
-  dialectOptions: { ssl : (ssl === 'true') ? sslConfig : {}  }
+  dialectOptions: { ssl }
 })
 
 const db = {}
