@@ -4,11 +4,11 @@ const Sequelize = require('sequelize')
 
 const {
   DATABASE_URL: dbUrl,
-  DATABASE_MAX_CONNECTIONS: max,
-  DATABASE_MIN_CONNECTIONS: min,
-  DATABASE_IDLE: idle,
-  DATABASE_AQUIRE: acquire,
-  DATABASE_EVICT: evict,
+  DATABASE_MAX_CONNECTIONS: maxString,
+  DATABASE_MIN_CONNECTIONS: minString,
+  DATABASE_IDLE: idleString,
+  DATABASE_AQUIRE: acquireString,
+  DATABASE_EVICT: evictString,
   DATABASE_SSL: sslEnabled,
   DATABASE_LOGGING: logging,
   DATABASE_CA: ca,
@@ -17,27 +17,28 @@ const {
   GKE: gke
 } = process.env
 
-let minTest = parseInt(min)
-let maxTest = parseInt(max)
-let idleTest = parseInt(idle)
-let acquireTest = parseInt(acquire)
-let evictTest = parseInt(evict) 
+const min = parseInt(minString)
+const max = parseInt(maxString)
+const idle = parseInt(idleString)
+const acquire = parseInt(acquireString)
+const evict = parseInt(evictString) 
 let ssl = {}
 
 if (gke === 'true' && sslEnabled === 'true') {
+  console.log('both true')
   ssl = { ca, cert, key }
 } else if (sslEnabled === 'true') {
+  console.log('ssl true')
   ssl = {
     ca: fs.readFileSync(path.join(__dirname,'../../', ca)),
     cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
     key: fs.readFileSync(path.join(__dirname,'../../', key))
   }
+const options = { pool: { max, min, idle, acquire, evict }, dialectOptions: {}}
+if (sslEnabled === 'true') {
+  options.dialectOptions.ssl = ssl
 }
-const sequelize = new Sequelize(dbUrl, {
-  pool: { maxTest, minTest, idleTest, acquireTest, evictTest },
-  // logging: false,
-  dialectOptions: { ssl }
-})
+const sequelize = new Sequelize(dbUrl, options)
 
 const db = {}
 
