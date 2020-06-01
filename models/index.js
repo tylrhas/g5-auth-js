@@ -34,6 +34,7 @@ if (gke === 'true' && sslEnabled === 'true') {
     cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
     key: fs.readFileSync(path.join(__dirname,'../../', key))
   }
+}
 const options = { pool: { max, min, idle, acquire, evict }, dialectOptions: {}}
 if (sslEnabled === 'true') {
   options.dialectOptions.ssl = ssl
