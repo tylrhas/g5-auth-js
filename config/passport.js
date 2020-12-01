@@ -5,13 +5,13 @@ module.exports = function (passport, user, config, authMeEndpoint) {
   const OAuth2Strategy = require('passport-oauth2')
   const axios = require('axios')
   passport.serializeUser((user, done) => {
-    console.log('serializeUser')
-    console.log({ user })
+    // console.log('serializeUser')
+    // console.log({ user })
     done(null, user)
   })
   passport.deserializeUser((user, done) => {
-    console.log('deserializeUser')
-    console.log({ user })
+    // console.log('deserializeUser')
+    // console.log({ user })
     done(null, user)
   })
 
