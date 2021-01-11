@@ -15,8 +15,7 @@ function init(app, config) {
   app.use(cookieSession({
     name: 'g5Auth',
     keys: [`${config.session.secret}`],
-    // maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    maxAge: 20 * 60 * 1000  // 1 second
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
   app.use(passport.initialize())
   app.use(passport.session())
