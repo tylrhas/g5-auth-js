@@ -24,6 +24,7 @@ module.exports = sequelize => {
   })
   user.associate = (models) => {
     models.user.belongsTo(models.userGroup)
+    models.user.hasMany(models.role)
   }
   return user
 }

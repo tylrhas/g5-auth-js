@@ -13,7 +13,7 @@ module.exports = {
  */
 function init(app, config) {
   app.use(cookieSession({
-    name: 'mysession',
+    name: 'g5Auth',
     keys: [`${config.session.secret}`],
     maxAge: 24 * 60 * 60 * 1000 // 24 hours
   }))
