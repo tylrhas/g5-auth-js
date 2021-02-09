@@ -27,11 +27,11 @@ module.exports = function (passport, user, config, authMeEndpoint) {
         Authorization: `Bearer ${token}`
       }
       const { data: body } = await axios.get(url, { headers })
-      const { roles,  accessible_applications, first_name: firstName, last_name: lastName, title: role, email } = body
+      const { roles,  accessible_applications, first_name: firstName, last_name: lastName, title: role, email, id: authId } = body
       console.log({ body, roles, accessible_applications })
       const [ dbUser, created ] = await User.findOrCreate({
         where: { email },
-        defaults: { token, firstName, lastName, role }
+        defaults: { token, firstName, lastName, role, authId }
       })
       if (!created) {
         await dbUser.update({ firstName, lastName, role })
