@@ -6,6 +6,9 @@ module.exports = sequelize => {
       primaryKey: true,
       type: INTEGER
     },
+    authid: {
+      type: INTEGER
+    },
     firstName: {
       type: STRING
     },
