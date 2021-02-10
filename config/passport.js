@@ -22,7 +22,6 @@ module.exports = function (passport, user, config, authMeEndpoint) {
     console.log('authenticate')
     try {
       const url = authMeEndpoint
-      debugger
       const headers = {
         Authorization: `Bearer ${token}`
       }
