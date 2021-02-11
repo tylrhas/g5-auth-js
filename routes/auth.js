@@ -7,7 +7,6 @@ module.exports = (app, passport, sucessRedirectPath) => {
     passport.authenticate('oauth2', { failureRedirect: '/g5_auth/users/auth/g5' }),
     cookieParser(),
     function (req, res) {
-      debugger
       const { cookies } = req
       if (cookies.redirectPath) {
         res.redirect(cookies.redirectPath)

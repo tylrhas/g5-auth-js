@@ -36,7 +36,6 @@ function isAuthenticated (req, res, next, config) {
     const { path, query } = req
     const str = buildQueryString(query)
     res.cookie('redirectPath', `${path}${str}`, options)
-    debugger
     res.redirect('/g5_auth/users/auth/g5')
   }
 }
