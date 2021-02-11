@@ -21,7 +21,7 @@ function init(app, config) {
   app.use(passport.session())
   const db = require('./models')
   require('./config/passport')(passport, db.user, config.passport, config.authMeEndpoint)
-  require('./routes/auth')(app, passport, config)
+  require('./routes/auth')(app, passport, config.sucessRedirectPath)
   return models
 }
 
