@@ -25,7 +25,7 @@ function init(app, config) {
   return models
 }
 
-function isAuthenticated (req, res, next, config) {
+function isAuthenticated (req, res, next) {
   
   if (req.isAuthenticated()) {
     next()
