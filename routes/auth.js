@@ -1,5 +1,5 @@
 var cookieParser = require('cookie-parser')
-module.exports = (app, passport, config) => {
+module.exports = (app, passport, sucessRedirectPath) => {
   app.get('/g5_auth/users/auth/g5',
     passport.authenticate('oauth2'))
 
@@ -12,7 +12,7 @@ module.exports = (app, passport, config) => {
       if (cookies.redirectPath) {
         res.redirect(cookies.redirectPath)
       } else {
-        res.redirect(config.sucessRedirectPath)
+        res.redirect(sucessRedirectPath)
       }
     })
 }
