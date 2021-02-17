@@ -26,13 +26,38 @@ function init(app, config) {
 }
 
 function isAuthenticated (req, res, next) {
+  
   if (req.isAuthenticated()) {
     next()
   } else {
+    let options = {
+      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+  }
+    const { path, query } = req
+    const str = buildQueryString(query)
+    res.cookie('redirectPath', `${path}${str}`, options)
     res.redirect('/g5_auth/users/auth/g5')
   }
 }
 
 function models(sequelize) {
   return require('./models/sync')(sequelize)
+}
+
+function buildQueryString(query) {
+  let qString = ''
+  const keys = Object.keys(query)
+
+  if (keys.length > 1) {
+    qString = '?'
+  }
+  for(let i = 0; i < keys.length; i++) {
+    const key = keys[i]
+    const value = query[key]
+    if (i !== 0) {
+      qString += '&'
+    }
+    qString += `${key}=${value}`
+  }
+  return qString
 }
