@@ -6,7 +6,7 @@ module.exports = sequelize => {
       primaryKey: true,
       type: INTEGER
     },
-    authid: {
+    authId: {
       type: INTEGER
     },
     firstName: {
