@@ -48,7 +48,7 @@ function buildQueryString(query) {
   let qString = ''
   const keys = Object.keys(query)
 
-  if (keys.length > 1) {
+  if (keys.length >= 1) {
     qString = '?'
   }
   for(let i = 0; i < keys.length; i++) {
