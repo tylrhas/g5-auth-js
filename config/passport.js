@@ -1,49 +1,48 @@
 const models = require('../models')
+module.exports = function (passport, config) {
+const Auth0Strategy = require('passport-auth0')  // You can use this section to keep a smaller payload
+passport.serializeUser(function (user, done) {
+  const { id } = user
+  const email = user.emails[0].value
+  const roles = user._json['https://getg5.com/roles']
+  const firstName = user.name.givenName
+  const lastName = user.name.familyName
 
-module.exports = function (passport, user, config, authMeEndpoint) {
-  const User = user
-  const OAuth2Strategy = require('passport-oauth2')
-  const axios = require('axios')
-  passport.serializeUser((user, done) => {
-    // console.log('serializeUser')
-    // console.log({ user })
-    done(null, user)
-  })
-  passport.deserializeUser((user, done) => {
-    // console.log('deserializeUser')
-    // console.log({ user })
-    done(null, user)
-  })
+  done(null, { id, email, firstName, lastName, roles })
+})
 
-  // oauth 2 configuration for the passport strategy
-  passport.use(new OAuth2Strategy(config, authenticate))
+passport.deserializeUser(function (user, done) {
+  const { id } = user
+  done(null, user)
+})
 
-  async function authenticate(token, refreshToken, profile, cb) {
-    console.log('authenticate')
-    try {
-      const url = authMeEndpoint
-      const headers = {
-        Authorization: `Bearer ${token}`
-      }
-      const { data: body } = await axios.get(url, { headers })
-      const { roles,  accessible_applications, first_name: firstName, last_name: lastName, title: role, email, id: authId } = body
-      console.log({ body, roles, accessible_applications })
-      const [ dbUser, created ] = await User.findOrCreate({
-        where: { email },
-        defaults: { token, firstName, lastName, role, authId }
-      })
-      if (!created) {
-        await dbUser.update({ firstName, lastName, role })
-      }
-      const userId = dbUser.dataValues.id
-      await models.role.destroy({ where: { userId }})
-      for (let i = 0; i < roles.length; i++) {
-        const { name, type, urn } = roles[i]
-        await models.role.create({ userId, name, type, urn })
-      }
-      return cb(null, dbUser)
-    } catch (err) {
-      return cb(err, null)
+// Configure Passport to use Auth0
+const strategy = new Auth0Strategy(config, authenticate)
+
+passport.use(strategy)
+
+async function authenticate (accessToken, refreshToken, extraParams, profile, done) {
+  console.log({ profile })
+  const [user, created] = await models.user.findOrCreate({
+    where: {
+      email: profile.emails[0].value
+    },
+    defaults: {
+      auth0Id: profile.id,
+      email: profile.emails[0].value,
+      firstName: profile.name.givenName,
+      lastName: profile.name.familyName,
     }
-  }
+  })
+  if (!created) {
+    user.uppdate({
+      auth0Id: profile.id,
+    })
+  } 
+  // accessToken is the token to call Auth0 API (not needed in the most cases)
+  // extraParams.id_token has the JSON Web Token
+  // profile has all the information from the user
+  return done(null, profile)
+}
+
 }
