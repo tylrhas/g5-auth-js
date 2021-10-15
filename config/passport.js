@@ -35,7 +35,7 @@ async function authenticate (accessToken, refreshToken, extraParams, profile, do
     }
   })
   if (!created) {
-    user.uppdate({
+    user.update({
       auth0Id: profile.id,
     })
   } 
