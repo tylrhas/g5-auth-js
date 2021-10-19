@@ -1,8 +1,11 @@
 const passport = require('passport')
-const cookieSession = require('cookie-session')
+const session = require('express-session')
+const jwksClient = require('jwks-rsa')
+const jwt = require('jsonwebtoken')
+let globalConfig = null
 module.exports = {
   init,
-  isAuthenticated,
+  secured,
   models
 }
 /**
@@ -12,52 +15,68 @@ module.exports = {
  * @param {*} config
  */
 function init(app, config) {
-  app.use(cookieSession({
-    name: 'g5Auth',
-    keys: [`${config.session.secret}`],
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
-  }))
+  globalConfig = config
+  app.use(session(config.session))
   app.use(passport.initialize())
   app.use(passport.session())
-  const db = require('./models')
-  require('./config/passport')(passport, db.user, config.passport, config.authMeEndpoint)
-  require('./routes/auth')(app, passport, config.sucessRedirectPath)
-  return models
+  require('./config/passport')(passport, config.passport)
+  require('./routes/auth')(app, passport, config)
 }
 
-function isAuthenticated (req, res, next) {
-  
-  if (req.isAuthenticated()) {
-    next()
-  } else {
-    let options = {
-      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
+function getBearerToken (req) {
+  const bearerHeader = req.headers.authorization
+  const bearer = bearerHeader.split(' ')
+  const bearerToken = bearer[1]
+  return bearerToken
+}
+
+function verifyToken(req, res, next) {
+  const bearerToken = getBearerToken(req)
+  try {
+    jwt.verify(bearerToken, getKey, globalConfig.tokenSettings, function (err, decoded) {
+      if (err) {
+        throw new Error(err)
+      } else {
+        req.decoded = decoded
+        next()
+      }
+    })
+  } catch (err) {
+    res.status(403).send('Forbidden')
   }
-    const { path, query } = req
-    const str = buildQueryString(query)
-    res.cookie('redirectPath', `${path}${str}`, options)
-    res.redirect('/g5_auth/users/auth/g5')
+}
+
+function getKey(header, callback) {
+  const client = jwksClient({
+    jwksUri: `https://${globalConfig.passport.domain}/.well-known/jwks.json`
+  })
+  try {
+    client.getSigningKey(header.kid, function(err, key) {
+      if (err) {
+        console.log(err)
+      }
+      const signingKey = key.publicKey || key.rsaPublicKey
+      callback(null, signingKey)
+    })
+  } catch (e) {
+    console.log(e)
   }
+}
+function secured (req, res, next) {
+  if (typeof req.headers.authorization !== 'undefined') { 
+    return verifyToken(req, res, next)
+  } else if (req.user) {
+    req.userRoles = req.user.roles.map((role) => {
+      const { name, type, urn } = role
+      return { name, type, urn }
+    })
+    return next()
+  }
+  req.session.returnTo = req.originalUrl
+  res.redirect('/login')
 }
 
 function models(sequelize) {
   return require('./models/sync')(sequelize)
 }
 
-function buildQueryString(query) {
-  let qString = ''
-  const keys = Object.keys(query)
-
-  if (keys.length >= 1) {
-    qString = '?'
-  }
-  for(let i = 0; i < keys.length; i++) {
-    const key = keys[i]
-    const value = query[key]
-    if (i !== 0) {
-      qString += '&'
-    }
-    qString += `${key}=${value}`
-  }
-  return qString
-}

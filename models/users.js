@@ -9,6 +9,9 @@ module.exports = sequelize => {
     authId: {
       type: INTEGER
     },
+    auth0Id: {
+      type: STRING
+    },
     firstName: {
       type: STRING
     },
