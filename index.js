@@ -23,17 +23,17 @@ function init(app, config) {
   require('./routes/auth')(app, passport, config)
 }
 
-function getTokenParams (req) {
+function getBearerToken (req) {
   const bearerHeader = req.headers.authorization
   const bearer = bearerHeader.split(' ')
   const bearerToken = bearer[1]
-  return [bearerToken, getKey, globalConfig.tokenSettings]
+  return bearerToken
 }
 
 function verifyToken(req, res, next) {
-  const params = getTokenParams(req)
+  const bearerToken = getBearerToken(req)
   try {
-    jwt.verify(...params, function (err, decoded) {
+    jwt.verify(bearerToken, getKey, globalConfig.tokenSettings, function (err, decoded) {
       if (err) {
         throw new Error(err)
       } else {
