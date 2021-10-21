@@ -1,6 +1,6 @@
 {
   "name": "@getg5/g5-auth",
-  "version": "5.0.0",
+  "version": "5.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,7 +18,7 @@
   "author": "Tyler Hasenoehrl",
   "license": "ISC",
   "dependencies": {
-    "express-session": "^1.17.2",
+    "cookie-session": "^1.4.0",
     "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.5",
