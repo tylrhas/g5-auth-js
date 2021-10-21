@@ -1,5 +1,5 @@
 const passport = require('passport')
-const session = require('express-session')
+const session = require('cookie-session')
 const jwksClient = require('jwks-rsa')
 const jwt = require('jsonwebtoken')
 let globalConfig = null
