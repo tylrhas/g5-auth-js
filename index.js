@@ -53,7 +53,7 @@ function getKey(header, callback) {
   try {
     client.getSigningKey(header.kid, function(err, key) {
       if (err) {
-        console.log(err)
+        throw err
       }
       const signingKey = key.publicKey || key.rsaPublicKey
       callback(null, signingKey)

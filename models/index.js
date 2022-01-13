@@ -10,7 +10,6 @@ const {
   DATABASE_AQUIRE: acquireString,
   DATABASE_EVICT: evictString,
   DATABASE_SSL: sslEnabled,
-  DATABASE_LOGGING: logging,
   DATABASE_CA: ca,
   DATABASE_CERT: cert,
   DATABASE_KEY: key,
@@ -25,10 +24,8 @@ const evict = parseInt(evictString)
 let ssl = {}
 
 if (gke === 'true' && sslEnabled === 'true') {
-  console.log('both true')
   ssl = { ca, cert, key }
 } else if (sslEnabled === 'true') {
-  console.log('ssl true')
   ssl = {
     ca: fs.readFileSync(path.join(__dirname,'../../', ca)),
     cert: fs.readFileSync(path.join(__dirname, '../../', cert)),
@@ -44,7 +41,7 @@ const sequelize = new Sequelize(dbUrl, options)
 const db = {}
 
 fs.readdirSync(__dirname)
-   .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file !== 'sync.js') // get all the model files
+   .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file !== 'sync.js')
   .forEach(file => {
     const model = require(path.join(__dirname, file))(sequelize)
     const { name } = model
@@ -57,4 +54,4 @@ Object.keys(db).forEach(modelName => {
   }
 })
 
-module.exports = {...db, sequelize, Sequelize }
+module.exports = { ...db, sequelize, Sequelize }

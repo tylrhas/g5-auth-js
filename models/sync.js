@@ -4,7 +4,7 @@ const path = require('path')
 module.exports = function (sequelize) {
   const models = {}
   fs.readdirSync(__dirname)
-    .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file !== 'sync.js' ) // get all the model files
+    .filter(file => file.indexOf('.') !== 0 && file !== 'index.js' && file !== 'sync.js' )
     .forEach(file => {
       const model = require(path.join(__dirname, file))(sequelize)
       const { name } = model
