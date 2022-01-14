@@ -1,6 +1,6 @@
 {
   "name": "@getg5/g5-auth",
-  "version": "5.0.2-beta",
+  "version": "5.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
