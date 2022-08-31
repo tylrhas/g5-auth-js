@@ -30,12 +30,23 @@ function getBearerToken (req) {
   return bearerToken
 }
 
+function processJwtError(res, err) {
+  switch(err.name) {
+    case 'TokenExpiredError': 
+      res.status(401).send('Unauthorized')
+    break
+    default:
+      res.status(500).send(err.name)
+    break
+  }
+}
+
 function verifyToken(req, res, next) {
   const bearerToken = getBearerToken(req)
   try {
     jwt.verify(bearerToken, getKey, globalConfig.tokenSettings, function (err, decoded) {
       if (err) {
-        throw new Error(err)
+        processJwtError(res, err)
       } else {
         req.decoded = decoded
         next()
